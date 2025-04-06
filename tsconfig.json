@@ -5,7 +5,7 @@
     "declaration": true,
     "declarationMap": true,
     "module": "ES2015",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "ES2015",
     "strict": true
   }

@@ -21,8 +21,8 @@ forBlock['dialog_line'] = function(
   const statement_dialog = generator.statementToCode(block, 'dialog');
 
   // TODO: Assemble javascript into the code variable.
-  const code = `"${block.id}": { character: ${value_character}, dialog: ${statement_dialog} }`;
-  return JSON.stringify(code) + ', ';
+  const code = `{character: ${value_character}, dialog: ${statement_dialog}}`;
+  return JSON.stringify(code);
 }
 
 forBlock['dialog_text'] = function(
