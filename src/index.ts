@@ -28,6 +28,8 @@ if (!blocklyDiv) {
 const ws = Blockly.inject(blocklyDiv, {toolbox});
 const generator = new Blockly.CodeGenerator("generator");
 
+let responseHistory: string[] = [];
+
 // This function resets the code and output divs, shows the
 // generated code from the workspace, and evals the code.
 // In a real application, you probably shouldn't use `eval`.
@@ -48,10 +50,7 @@ const handlePrompt = (prompt: any) => {
     model: 'llama3.2:1b',
     messages: prompt,
   }).then((response) => {
-    const text = response.message.content;
-    if (outputDiv) {
-      outputDiv.innerHTML = text;
-    }
+    buildScript(response.message.content);
   }).catch((error) => {
     console.error('Error:', error);
     if (outputDiv) {
@@ -59,7 +58,6 @@ const handlePrompt = (prompt: any) => {
     }
   });
 }
-
 
 // constructs the prompt based on the blocks in the workspace
 const constructPrompt = (dialog_lines: Blockly.Block[]) => {
@@ -89,10 +87,28 @@ const constructPerspectivePrompt = (dialog_lines: Blockly.Block[]) => {
   // conditionally control response prompt based on if this is the first line
   if (messages.length <= 1) {
     messages.push({role: 'user', content: `You start by saying a line of dialog as ${currCharacter?.getFieldValue('name')}, based on the following prompt: "${currDialog.getFieldValue('prompt')}".`});
-  } else {
+  } else if (currDialog) {
     messages.push({role: 'user', content: `You now respond with a line of dialog as ${currCharacter?.getFieldValue('name')}, based on the conversation so far and on the following prompt: "${currDialog.getFieldValue('prompt')}".`});
   }
   return messages;
+}
+
+const buildScript = (response: string) => {
+  // clear the output div
+  if (outputDiv) {
+    outputDiv.innerHTML = '';
+  }
+
+  // add the response to the history
+  responseHistory.push(response);
+
+  // add the response to the output div
+  if (outputDiv) {
+    const responseDiv = document.createElement('div');
+    responseDiv.className = 'response';
+    responseDiv.innerHTML = response;
+    outputDiv.appendChild(responseDiv);
+  }
 }
 
 // initial startup work
@@ -109,18 +125,24 @@ if (ws) {
     save(ws);
   });
 
-  // Whenever the workspace changes meaningfully, run the code again.
-  ws.addChangeListener((e: Blockly.Events.Abstract) => {
-    // Don't run the code when the workspace finishes loading; we're
-    // already running it once when the application starts.
-    // Don't run the code during drags; we might have invalid state.
-    if (
-      e.isUiEvent ||
-      e.type == Blockly.Events.FINISHED_LOADING ||
-      ws.isDragging()
-    ) {
-      return;
-    }
+    // add change listener to the run button
+  document.getElementById('run-button')?.addEventListener('click', () => {
+    console.log('Run button clicked');
     runCode();
   });
+
+  // // Whenever the workspace changes meaningfully, run the code again.
+  // ws.addChangeListener((e: Blockly.Events.Abstract) => {
+  //   // Don't run the code when the workspace finishes loading; we're
+  //   // already running it once when the application starts.
+  //   // Don't run the code during drags; we might have invalid state.
+  //   if (
+  //     e.isUiEvent ||
+  //     e.type == Blockly.Events.FINISHED_LOADING ||
+  //     ws.isDragging()
+  //   ) {
+  //     return;
+  //   }
+  //   runCode();
+  // });
 }

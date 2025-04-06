@@ -2,13 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Blockly Sample App</title>
+    <title>ScriptBuilder</title>
   </head>
   <body>
     <div id="pageContainer">
       <div id="outputPane">
-        <pre id="generatedCode"><code id="code" style="text-wrap: wrap;"></code></pre>
-        <div id="output"></div>
+        <h1>ScriptBuilder</h1>
+        <p>Drag and drop blocks to create a script. Click the "Create Script" below to generate the script.</p>
+        <h4>Prompt:</h4>
+        <pre id="generatedCode"  style="height: 25%;"><code id="code" style="text-wrap: wrap; overflow: auto;"></code></pre>
+        <h2>Script:</h2>
+        <button id="run-button" class="button">Create Script</button>
+        <div id="output" style="overflow: auto; margin-top: 5%;"></div>
       </div>
       <div id="blocklyDiv"></div>
     </div>
