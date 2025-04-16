@@ -36,12 +36,14 @@ let responseHistory: string[] = [];
 const runCode = () => {
   // get each dialog line and create the chat history
   const dialog_lines: Blockly.Block[] = ws.getAllBlocks(true).filter((block) => block.type === 'dialog_line');
-  const prompt = constructPrompt(dialog_lines);
-  console.log(prompt);
-  if (codeDiv) {
-    codeDiv.innerHTML = JSON.stringify(prompt);
+  if (dialog_lines.length > 0) {
+    const prompt = constructPrompt(dialog_lines);
+    console.log(prompt);
+    if (codeDiv) {
+      codeDiv.innerHTML = JSON.stringify(prompt);
+    }
+    handlePrompt(prompt);
   }
-  handlePrompt(prompt);
 };
 
 const handlePrompt = (prompt: any) => {
@@ -104,10 +106,11 @@ const buildScript = (response: string) => {
 
   // add the response to the output div
   if (outputDiv) {
-    const responseDiv = document.createElement('div');
-    responseDiv.className = 'response';
-    responseDiv.innerHTML = response;
-    outputDiv.appendChild(responseDiv);
+    let listHTML = '';
+    responseHistory.forEach((line, index) => {
+      listHTML += `<li>${line}</li>`;
+    });
+    outputDiv.innerHTML = '<ul>' + listHTML + '</ul>';
   }
 }
 
