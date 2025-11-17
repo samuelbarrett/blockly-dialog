@@ -26,7 +26,7 @@ const dialogText = {
   type: 'dialog_text',
   tooltip: 'Describe something this character will say',
   helpUrl: '',
-  message0: 'text description: %1 %2',
+  message0: 'The robot says: %1 %2',
   args0: [
     {
       type: 'field_input',
@@ -45,7 +45,7 @@ const dialogText = {
 
 const character = {
   type: "character",
-  tooltip: "Describes a recurring character for your dialog",
+  tooltip: "Describes a recurring character for your dialog, including personality, mood, or appearance.",
   helpUrl: "",
   message0: "Name:  %1 %2 ------------- Attributes ------------- %3 Description: %4 %5",
   args0: [
